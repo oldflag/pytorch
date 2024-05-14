@@ -4,11 +4,11 @@ from torch import optim, nn
 import matplotlib.pyplot as plt
 from modeling_functions import *
 from torchvision import transforms
-from models import MLP_CIFAR10, CNN_CIFAR10, CNN_deep_CIFAR10
+from models import *
 from plot_functions import plot_saved_training_history, plot_model_analysis
 
 # Load configuration from JSON file
-with open('config_CIFAR10.json', 'r') as f:
+with open('config_MNIST.json', 'r') as f:
     config = json.load(f)
 
 # Extract parameters from the config
@@ -28,9 +28,9 @@ transform_std = config["transform_std"]
 
 # Dictionary mapping model type names to model classes
 model_classes = {
-    'MLP_CIFAR10': MLP_CIFAR10,
-    'CNN_CIFAR10': CNN_CIFAR10,
-    'CNN_deep_CIFAR10': CNN_deep_CIFAR10
+    # 'MLP_MNIST': MLP_MNIST,
+    'CNN_MNIST': CNN_MNIST,
+    # 'CNN_deep_MNIST': CNN_deep_MNIST
 }
 
 def main():

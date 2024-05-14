@@ -4,11 +4,11 @@ from torch import optim, nn
 import matplotlib.pyplot as plt
 from modeling_functions import *
 from torchvision import transforms
-from models import MLP_CIFAR10, CNN_CIFAR10, CNN_deep_CIFAR10
+from models import CNN_STL10
 from plot_functions import plot_saved_training_history, plot_model_analysis
 
 # Load configuration from JSON file
-with open('config_CIFAR10.json', 'r') as f:
+with open('config_STL10.json', 'r') as f:
     config = json.load(f)
 
 # Extract parameters from the config
@@ -28,9 +28,9 @@ transform_std = config["transform_std"]
 
 # Dictionary mapping model type names to model classes
 model_classes = {
-    'MLP_CIFAR10': MLP_CIFAR10,
-    'CNN_CIFAR10': CNN_CIFAR10,
-    'CNN_deep_CIFAR10': CNN_deep_CIFAR10
+    # 'MLP_STL10': MLP_STL10,
+    'CNN_STL10': CNN_STL10,
+    # 'CNN_deep_STL10': CNN_deep_STL10
 }
 
 def main():
@@ -59,7 +59,7 @@ def main():
     
     # Load the model for testing and analysis
     model.load_state_dict(torch.load(save_model_path))
-    # Test(model, test_DL, criterion)
+    Test(model, test_DL, criterion)
 
 
     # Plot

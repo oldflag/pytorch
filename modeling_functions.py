@@ -1,4 +1,3 @@
-
 import torch
 from torch import nn, optim
 from torchvision import datasets, transforms
@@ -14,20 +13,6 @@ DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 
 def load_data(dataset_name, batch_size, train_ratio=0.8, transform_train=None, transform_test=None):
     """Loads data for a given dataset with specified transforms, splits it into train, validation and test sets."""
-    # Define default transformations if none provided
-    if transform_train is None:
-        transform_train = transforms.Compose([
-            transforms.RandomHorizontalFlip(),
-            transforms.RandomCrop(32, padding=4),
-            transforms.ToTensor(),
-            transforms.Normalize((0.5,), (0.5,))
-        ])
-        
-    if transform_test is None:
-        transform_test = transforms.Compose([
-            transforms.ToTensor(),
-            transforms.Normalize((0.5,), (0.5,))
-        ])
     
     # Load the appropriate dataset
     dataset_classes = {
@@ -43,8 +28,12 @@ def load_data(dataset_name, batch_size, train_ratio=0.8, transform_train=None, t
     root_dir = f'./data/{dataset_name.upper()}'
     
     # Download and load the datasets
-    train_and_valid = DatasetClass(root=root_dir, train=True, download=True, transform=transform_train)
-    test_dataset = DatasetClass(root=root_dir, train=False, download=True, transform=transform_test)
+    if dataset_name.lower() in ['cifar10', 'mnist']:
+        train_and_valid = DatasetClass(root=root_dir, train=True, download=True, transform=transform_train)
+        test_dataset = DatasetClass(root=root_dir, train=False, download=True, transform=transform_test)
+    elif dataset_name.lower() == 'stl10':
+        train_and_valid = DatasetClass(root=root_dir, split='train', download=True, transform=transform_train)
+        test_dataset = DatasetClass(root=root_dir, split='test', download=True, transform=transform_test)
     
     # Split train dataset into train and validation
     train_size = int(len(train_and_valid) * train_ratio)
@@ -87,10 +76,10 @@ def Train(model, train_DL, val_DL, criterion, optimizer, EPOCH, BATCH_SIZE, TRAI
             if val_loss < best_loss:
                 best_loss = val_loss
                 torch.save({
-                    "model": model,
+                    "model": model.state_dict(),
                     "ep": ep,
-                    "optimizer": optimizer,
-                    "scheduler": scheduler
+                    "optimizer": optimizer.state_dict(),
+                    "scheduler": scheduler.state_dict() if scheduler else None
                 }, save_model_path)
 
         if scheduler:
@@ -160,23 +149,23 @@ def Test(model, test_DL, criterion):
     print(f"Test accuracy: {correct_count}/{len(test_DL.dataset)} ({test_acc:.1f} %)")
     return test_acc
 
-def Test_plot(model, test_DL):
-    """Plots first six test images with predicted and true labels."""
-    model.eval()
-    inputs, labels = next(iter(test_DL))
-    inputs = inputs.to(DEVICE)
-    outputs = model(inputs)
-    predictions = outputs.argmax(dim=1)
-    inputs = inputs.to("cpu")  # Move inputs back to CPU for plotting
+# def Test_plot(model, test_DL):
+#     """Plots first six test images with predicted and true labels."""
+#     model.eval()
+#     inputs, labels = next(iter(test_DL))
+#     inputs = inputs.to(DEVICE)
+#     outputs = model(inputs)
+#     predictions = outputs.argmax(dim=1)
+#     inputs = inputs.to("cpu")  # Move inputs back to CPU for plotting
     
-    plt.figure(figsize=(8, 4))
-    for idx in range(6):
-        ax = plt.subplot(2, 3, idx + 1, xticks=[], yticks=[])
-        plt.imshow(inputs[idx].permute(1, 2, 0).squeeze(), cmap="gray")
-        pred_class = test_DL.dataset.classes[predictions[idx]]
-        true_class = test_DL.dataset.classes[labels[idx]]
-        plt.title(f"{pred_class} ({true_class})", color=("green" if pred_class == true_class else "red"))
-    plt.show()
+#     plt.figure(figsize=(8, 4))
+#     for idx in range(6):
+#         ax = plt.subplot(2, 3, idx + 1, xticks=[], yticks=[])
+#         plt.imshow(inputs[idx].permute(1, 2, 0).squeeze(), cmap="gray")
+#         pred_class = test_DL.dataset.classes[predictions[idx]]
+#         true_class = test_DL.dataset.classes[labels[idx]]
+#         plt.title(f"{pred_class} ({true_class})", color=("green" if pred_class == true_class else "red"))
+#     plt.show()
 
 def count_params(model):
     """Returns the count of trainable parameters in the model."""

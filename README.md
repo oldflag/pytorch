@@ -2,7 +2,7 @@
 # PyTorch Classification Models Project
 
 This project showcases a collection of neural network models implemented in PyTorch, aimed at tackling classification tasks on popular datasets like CIFAR-10, MNIST, and STL10. The project includes models such as Multilayer Perceptron (MLP), Convolutional Neural Networks (CNN), and deeper CNN architectures.
-Also it includes some plots such as loss & accouracy curve and absolute mean weight and gradients over epochs.
+Also it includes some plots such as loss & accouracy curve, absolute mean weight and gradient curve over epochs. With these plots, I wan to check not only performance of models but also vanishing gradients.
 
 ## Features
 

@@ -1,0 +1,15 @@
+{
+  "DEVICE": "cuda",
+  "BATCH_SIZE": 64,
+  "LR": 0.002,
+  "EPOCH": 10,
+  "TRAIN_RATIO": 0.8,
+  "criterion": "CrossEntropyLoss",
+  "model_type": "CNN_MNIST",
+  "dataset": "MNIST",
+  "new_model_train": true,
+  "save_model_path": "./results/CNN_MNIST_MNIST.pt",
+  "save_history_path": "./results/CNN_MNIST_history_MNIST.pt",
+  "transform_mean": [0.485],
+  "transform_std": [0.229]
+}
