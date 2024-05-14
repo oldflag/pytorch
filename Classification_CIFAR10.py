@@ -65,6 +65,12 @@ def main():
     # Plot
     plot_saved_training_history(save_history_path)
     plot_model_analysis(save_history_path)
+
+    # Generate and plot confusion matrix
+    conf_matrix = get_conf(model, test_DL)
+    class_names = test_DL.dataset.classes
+    plot_confusion_matrix(conf_matrix, class_names)
+    
     plt.show()
 
 if __name__ == "__main__":

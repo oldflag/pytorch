@@ -171,35 +171,43 @@ def count_params(model):
     """Returns the count of trainable parameters in the model."""
     return sum(p.numel() for p in model.parameters() if p.requires_grad)
 
+
 def get_conf(model, test_DL):
     """Generates a confusion matrix for the model predictions on the test dataset."""
     model.eval()
-    confusion_matrix = torch.zeros(10, 10, dtype=torch.int64)
+    num_classes = len(test_DL.dataset.classes)
+    confusion_matrix = torch.zeros(num_classes, num_classes, dtype=torch.int64)
     with torch.no_grad():
         for inputs, labels in test_DL:
             inputs, labels = inputs.to(DEVICE), labels.to(DEVICE)
             outputs = model(inputs)
             predictions = outputs.argmax(dim=1)
             for pred, true in zip(predictions, labels):
-                confusion_matrix[pred, true] += 1
+                confusion_matrix[true.item(), pred.item()] += 1
 
     return confusion_matrix.numpy()
 
-def plot_confusion_matrix(confusion):
+def plot_confusion_matrix(confusion, class_names):
     """Plots a confusion matrix."""
     accuracy = np.trace(confusion) / np.sum(confusion) * 100
-    confusion = confusion / np.sum(confusion, axis=1)[:, np.newaxis]  # Normalize confusion matrix
+    confusion_normalized = confusion.astype('float') / confusion.sum(axis=1)[:, np.newaxis]
+    
     plt.figure(figsize=(10, 7))
-    plt.imshow(confusion, interpolation='nearest', cmap=plt.get_cmap('Blues'))
-    plt.title('Confusion Matrix')
+    plt.imshow(confusion_normalized, interpolation='nearest', cmap=plt.get_cmap('Blues'))
+    plt.title(f'Confusion Matrix (Accuracy: {accuracy:.2f}%)')
     plt.colorbar()
-    ticks = np.arange(10)
-    plt.xticks(ticks, ticks)
-    plt.yticks(ticks, ticks)
-    plt.xlabel('Predicted')
-    plt.ylabel('True')
+    ticks = np.arange(len(class_names))
+    plt.xticks(ticks, class_names, rotation=45)
+    plt.yticks(ticks, class_names)
+    plt.xlabel('Predicted Label')
+    plt.ylabel('True Label')
     plt.grid(False)
-    for i in range(10):
-        for j in range(10):
-            plt.text(j, i, f"{confusion[i, j]:.2f}", horizontalalignment="center", color="white" if confusion[i, j] > 0.5 else "black")
-    plt.show()
+    
+    for i in range(confusion.shape[0]):
+        for j in range(confusion.shape[1]):
+            plt.text(j, i, f"{confusion_normalized[i, j]:.2f}", 
+                     horizontalalignment="center", 
+                     color="white" if confusion_normalized[i, j] > 0.5 else "black")
+    
+    plt.tight_layout()
+    # plt.show()
