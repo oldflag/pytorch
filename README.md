@@ -18,35 +18,24 @@ Ensure you have Python 3.x installed along with PyTorch and torchvision. This pr
 
 ### Installation
 
-1. **Clone the repository**:
-   \`\`\`bash
-   git clone https://github.com/oldflag/pytorch
-   cd pytorch
-   \`\`\`
+1. **Clone the repository**:   
+   git clone https://github.com/oldflag/pytorch   
 
-2. **Install dependencies**:
-   \`\`\`bash
-   pip install torch torchvision matplotlib tqdm
-   \`\`\`
+2. **Install dependencies**:   
+   pip install torch torchvision matplotlib tqdm   
 
 ### Running the Project
 
 To run the project, execute the main script for the desired dataset from the command line:
 
-For CIFAR-10:
-\`\`\`bash
-python Classification_CIFAR10.py
-\`\`\`
+For CIFAR-10:   
+python Classification_CIFAR10.py   
 
-For MNIST:
-\`\`\`bash
-python Classification_MNIST.py
-\`\`\`
+For MNIST:   
+python Classification_MNIST.py   
 
-For STL10:
-\`\`\`bash
-python Classification_STL10.py
-\`\`\`
+For STL10:   
+python Classification_STL10.py   
 
 ### Configuration
 
@@ -54,7 +43,7 @@ Each dataset has its own configuration file (e.g., \`config_CIFAR10.json\`, \`co
 
 ### Example Configuration (\`config_CIFAR10.json\`)
 
-\`\`\`json
+json
 {
   "DEVICE": "cuda",
   "BATCH_SIZE": 64,
@@ -69,10 +58,9 @@ Each dataset has its own configuration file (e.g., \`config_CIFAR10.json\`, \`co
   "save_history_path": "./results/CNN_CIFAR10_history_CIFAR10.pt",
   "transform_mean": [0.485, 0.456, 0.406],
   "transform_std": [0.229, 0.224, 0.225]
-}
-\`\`\`
+}   
 
-## Project Structure
+## Project Structure   
 
 - **Classification_CIFAR10.py**: Script to train and evaluate models on the CIFAR-10 dataset.
 - **Classification_MNIST.py**: Script to train and evaluate models on the MNIST dataset.
